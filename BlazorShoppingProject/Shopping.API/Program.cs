@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shopping.API.Data;
+using Shopping.API.Repository;
+using Shopping.API.Repository.Contacts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,10 @@ builder.Services.AddSwaggerGen();
 // Register the DbContext with the dependency injection container
 builder.Services.AddDbContext<ShopOnlineDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+// Register the repository with the dependency injection container
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 

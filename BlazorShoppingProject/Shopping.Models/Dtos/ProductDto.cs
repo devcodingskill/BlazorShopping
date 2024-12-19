@@ -15,7 +15,7 @@ namespace Shopping.Models.Dtos
         public string ImageURL { get; set; }
         public int Quantity { get; set; }
         public string CategoryName { get; set; }
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
     }
 }
