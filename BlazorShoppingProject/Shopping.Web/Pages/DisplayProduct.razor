@@ -1,0 +1,25 @@
+﻿@* as Child Component we don't need to add page route *@
+@* because  this class need to get call frop the parent only*@
+
+@inherits DisplayProductBase
+
+@foreach (var item in Products)
+{
+    <div class="col-md-3 mb-2">
+        <a href="#">
+            <div class="card">
+                <img class="img-thumbnail" src="@item.ImageURL" />
+                <div class="card-body">
+                    <h5 class="card-title mb-5">
+                        @item.Name
+                    </h5>
+                    <p class="card-text">
+                        <b> @item.Price.ToString("C")</b>
+                    </p>
+                </div>
+            </div>
+        </a>
+    </div>
+}
+
+
