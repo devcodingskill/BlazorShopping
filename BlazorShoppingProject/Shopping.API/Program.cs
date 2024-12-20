@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using Shopping.API.Data;
 using Shopping.API.Repository;
 using Shopping.API.Repository.Contacts;
@@ -29,6 +31,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//Enable CORS policy as we are going to access the API from a different domain
+app.UseCors(policy => policy.WithOrigins("http://localhost:7070"," https://localhost:7070")
+.AllowAnyMethod()
+.WithHeaders(HeaderNames.ContentType)
+.AllowAnyOrigin());
+
+//app.AddCors(options =>
+//    {
+//        options.AddPolicy("AllowAllOrigins",
+//            builder =>
+//            {
+//                builder.AllowAnyOrigin()
+//                       .AllowAnyMethod()
+//                       .AllowAnyHeader();
+//            });
+//    });
+
 
 app.UseHttpsRedirection();
 
