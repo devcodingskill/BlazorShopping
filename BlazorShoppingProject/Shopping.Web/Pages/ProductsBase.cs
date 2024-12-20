@@ -18,5 +18,15 @@ namespace Shopping.Web.Pages
         {
             Products = await ProductService.GetItems();
         }
+
+        protected IOrderedEnumerable<IGrouping<int, ProductDto>> GetGroupProductsByCategory()
+        {
+            return Products.GroupBy(p => p.CategoryId).OrderBy(g => g.Key);
+        }
+
+        protected string GetCategoryName(IGrouping<int, ProductDto> groupProductDtos)
+        {
+            return groupProductDtos.FirstOrDefault(pg => pg.CategoryId == groupProductDtos.Key).CategoryName;
+        }
     }
 }
