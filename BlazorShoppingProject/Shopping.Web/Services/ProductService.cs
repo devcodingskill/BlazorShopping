@@ -20,7 +20,40 @@ namespace Shopping.Web.Services
             }
             catch (HttpRequestException httpRequestException)
             {
-                 Console.WriteLine($"Error fetching products: {httpRequestException.Message}");
+                Console.WriteLine($"Error fetching products: {httpRequestException.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                throw;
+            }
+        }
+        public async Task<ProductDto> GetItem(int id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"api/Product/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                        return default(ProductDto);
+                    else
+                    {
+                        var productDto = await response.Content.ReadFromJsonAsync<ProductDto>();
+                        return productDto;
+                    }
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();                    
+                    throw new Exception(message);
+                }
+            }
+            catch (HttpRequestException httpRequestException)
+            {
+                Console.WriteLine($"Error fetching products: {httpRequestException.Message}");
                 throw;
             }
             catch (Exception ex)

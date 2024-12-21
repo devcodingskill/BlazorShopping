@@ -52,22 +52,37 @@ namespace Shopping.API.Extensions
 
 
             //join the product and product category tables to get the category name
-          var  productDtos = (from product in products
-                           join productCategory in productCategories
-                           on product.CategoryId equals productCategory.Id
-                           select new ProductDto
-                           {
-                               Id = product.Id,
-                               Name = product.Name,
-                               Description = product.Description,
-                               Price = product.Price,
-                               ImageURL = product.ImageURL,
-                               Quantity = product.Qty,
-                               CategoryId = product.CategoryId,
-                               CategoryName = productCategory.Name
-                           }).ToList();
+            var productDtos = (from product in products
+                               join productCategory in productCategories
+                               on product.CategoryId equals productCategory.Id
+                               select new ProductDto
+                               {
+                                   Id = product.Id,
+                                   Name = product.Name,
+                                   Description = product.Description,
+                                   Price = product.Price,
+                                   ImageURL = product.ImageURL,
+                                   Quantity = product.Qty,
+                                   CategoryId = product.CategoryId,
+                                   CategoryName = productCategory.Name
+                               }).ToList();
 
             return productDtos;
         }
+        public static ProductDto ConvertToDto(this Product product, ProductCategory productCategory)
+        {
+            return new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                ImageURL = product.ImageURL,
+                Quantity = product.Qty,
+                CategoryId = product.CategoryId,
+                CategoryName = productCategory.Name
+            };
+        }
+
     }
 }
