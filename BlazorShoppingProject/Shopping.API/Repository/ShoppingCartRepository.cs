@@ -63,6 +63,22 @@ namespace Shopping.API.Repository
                               ProductId = cartItem.ProductId,
                               Quantity = cartItem.Quantity
                           }).SingleOrDefaultAsync();
+
+            //var result = _shopOnlineDBContext.Carts.Join(_shopOnlineDBContext.CartItems,
+            //               cart => cart.Id,
+            //               cartItem => cartItem.Id,
+            //               (cart, cartItem) => new { cart, cartItem });
+
+            //var filteredResult = result.Where(joined => joined.cartItem.Id == id);
+            //var projectedResult = filteredResult.Select(joined => new CartItem
+            //{
+            //    Id = joined.cartItem.Id,
+            //    CartId = joined.cartItem.CartId,
+            //    ProductId = joined.cartItem.ProductId,
+            //    Quantity = joined.cartItem.Quantity
+            //});
+
+            //return await projectedResult.SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<CartItem>> GetItems(int userId)
@@ -78,10 +94,10 @@ namespace Shopping.API.Repository
             //                  ProductId = cartItem.ProductId,
             //                  Quantity = cartItem.Quantity
             //              }).ToListAsync();
-           
+
             return await _shopOnlineDBContext.Carts
                 .Where(c => c.UserId == userId)
-               .Join(_shopOnlineDBContext.CartItems, c => c.Id, ci => ci.CartId, 
+               .Join(_shopOnlineDBContext.CartItems, c => c.Id, ci => ci.CartId,
                (c, ci) => new CartItem
                {
                    Id = ci.Id,
