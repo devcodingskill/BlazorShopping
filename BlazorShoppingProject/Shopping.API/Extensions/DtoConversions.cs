@@ -84,5 +84,44 @@ namespace Shopping.API.Extensions
             };
         }
 
+        public static IEnumerable<CartItemDto> ConvertToDto(this IEnumerable<CartItem> cartItems, IEnumerable<Product> products)
+        {
+            var cartItemDtos = (from cartItem in cartItems
+                                join product in products
+                                on cartItem.ProductId equals product.Id
+                                select new CartItemDto
+                                {
+                                    Id = cartItem.Id,
+                                    CartId = cartItem.CartId,
+                                    ProductId = cartItem.ProductId,
+                                    Quantity = cartItem.Quantity,
+                                    Price = product.Price,
+                                    ProductName = product.Name,
+                                    ProductDescription = product.Description,
+                                    ProductImageURL = product.ImageURL,
+                                    TotalPrice = cartItem.Quantity * product.Price
+                                }).ToList();
+
+            return cartItemDtos;
+        }
+
+        public static CartItemDto ConvertToDto(this CartItem cartItem, Product product)
+        {
+
+            return new CartItemDto
+            {
+                Id = cartItem.Id,
+                CartId = cartItem.CartId,
+                ProductId = cartItem.ProductId,
+                Quantity = cartItem.Quantity,
+                Price = product.Price,
+                ProductName = product.Name,
+                ProductDescription = product.Description,
+                ProductImageURL = product.ImageURL,
+                TotalPrice = cartItem.Quantity * product.Price
+            };
+
+
+        }
     }
 }

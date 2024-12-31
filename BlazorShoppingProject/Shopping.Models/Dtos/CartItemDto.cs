@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shopping.Models.Dtos
 {
-    public class CartAItemDto
+    public class CartItemDto
     {
         public int Id { get; set; }
         public int CartId { get; set; }
