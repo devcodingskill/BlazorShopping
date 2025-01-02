@@ -45,10 +45,6 @@ namespace Shopping.API.Repository
 
         }
 
-        public Task<CartItem> DeleteItem(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<CartItem> GetItem(int id)
         {
@@ -112,6 +108,17 @@ namespace Shopping.API.Repository
         public Task<CartItem> UpdateQty(int id, CartItemQtyUpdateDto cartItemToUpdateDto)
         {
             throw new NotImplementedException();
+        }
+        public async Task<CartItem> DeleteItem(int id)
+        {
+            var cartItem = await _shopOnlineDBContext.CartItems.FindAsync(id);
+            if (cartItem != null)
+            {
+                _shopOnlineDBContext.CartItems.Remove(cartItem);
+                await this._shopOnlineDBContext.SaveChangesAsync();
+
+            }
+            return cartItem;
         }
     }
 }

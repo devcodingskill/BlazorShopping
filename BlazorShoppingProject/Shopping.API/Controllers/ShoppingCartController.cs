@@ -47,7 +47,7 @@ namespace Shopping.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
             }
         }
-        [HttpGet( "{id:int}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<CartItemDto>> GetItem(int id)
         {
             try
@@ -72,7 +72,7 @@ namespace Shopping.API.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<CartItemDto>> AddItem([FromBodyAttribute]CartItemToAddDto cartItemToAddDto)
+        public async Task<ActionResult<CartItemDto>> AddItem([FromBodyAttribute] CartItemToAddDto cartItemToAddDto)
         {
             try
             {
@@ -88,13 +88,38 @@ namespace Shopping.API.Controllers
                 }
                 //standard way of returning the newly created item by returning the location of the item and the item itself using CreatedAtAction
                 var item = cartItem.ConvertToDto(product);
-                return CreatedAtAction(nameof(GetItem), new { id = item.Id },item);
+                return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
             }
             catch (Exception)
             {
 
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
             }
+        }
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<CartItemDto>> DeleteItem(int id)
+        {
+            try
+            {
+                var cartItem = await _shoppingCartRepository.DeleteItem(id);
+                if (cartItem == null)
+                {
+                    return NotFound();
+                }
+                var product = await _productRepository.GetItem(cartItem.ProductId);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+                var cartItemDto = cartItem.ConvertToDto(product);
+                return Ok(cartItemDto);
+            }
+            catch (Exception ex)
+            {
+
+               return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
         }
     }
 }
