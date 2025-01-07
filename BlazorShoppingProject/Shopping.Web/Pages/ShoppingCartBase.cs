@@ -51,5 +51,34 @@ namespace Shopping.Web.Pages
         {
             return ShoppingCartItems.FirstOrDefault(i => i.Id == id);
         }
+        protected async Task UpdateQtyCartItem_Click(int id, int qty)
+        {
+            try
+            {
+                if (qty > 0)
+                {
+                    var updateItemDto = new CartItemQtyUpdateDto
+                    {
+                        CartItemId = id,
+                        Quantity = qty
+                    };
+                    var result = await ShoppingCartService.UpdateItem(updateItemDto);
+                }
+                else
+                {
+                    var item = ShoppingCartItems.FirstOrDefault(i => i.Id == id);
+                    if (item != null)
+                    {
+                        item.Quantity = 1;
+                        item.TotalPrice = item.Price;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
