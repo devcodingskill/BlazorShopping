@@ -12,6 +12,9 @@ namespace Shopping.Web.Services
         {
             _httpClient = httpClient;
         }
+
+        public event Action<int> OnShoppingCartChange;
+
         public async Task<CartItemDto> AddItem(CartItemToAddDto item)
         {
             try
@@ -86,6 +89,17 @@ namespace Shopping.Web.Services
 
                 throw;
             }
+        }
+
+        public void RaiseEventOnShoppingCartChanged(int totalQty)
+        {
+            if (OnShoppingCartChange != null) //check if there are any subscribers to the event
+            {
+                //means there are subscribers to the event then raise the event
+                //we send the int value to each subscriber by invoking the event
+                OnShoppingCartChange.Invoke(totalQty); //raise the event
+            }
+           
         }
 
         public async Task<CartItemDto> UpdateItem(CartItemQtyUpdateDto cartItemQtyUpdateDto)

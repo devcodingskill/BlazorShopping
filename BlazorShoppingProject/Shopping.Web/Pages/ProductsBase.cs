@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Shopping.Models.Dtos;
 using Shopping.Web.Services.Contracts;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Shopping.Web.Pages
 {
     //This class need to be inherited by other components
     public class ProductsBase : ComponentBase
     {
+        [Inject]
+        public IShoppingCartService ShoppingCartService { get; set; }
+
         //Inject the ProductService to get the products
         [Inject]
         public IProductService ProductService { get; set; }
@@ -16,7 +20,20 @@ namespace Shopping.Web.Pages
         //this is a lifecycle method for blazor that is called when the component is initialized
         override protected async Task OnInitializedAsync()
         {
-            Products = await ProductService.GetItems();
+            try
+            {
+                Products = await ProductService.GetItems();
+
+                var shoppingCartItem = await ShoppingCartService.GetItems(HardCode.UserId);
+                var totalItems = shoppingCartItem.Sum(i => i.Quantity);
+                ShoppingCartService.RaiseEventOnShoppingCartChanged(totalItems);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
         protected IOrderedEnumerable<IGrouping<int, ProductDto>> GetGroupProductsByCategory()

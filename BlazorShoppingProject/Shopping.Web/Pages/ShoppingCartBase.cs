@@ -24,7 +24,7 @@ namespace Shopping.Web.Pages
             try
             {
                 ShoppingCartItems = await ShoppingCartService.GetItems(HardCode.UserId);
-                CalculateCartSummaryTotals();
+                CartChanged();
             }
             catch (Exception ex)
             {
@@ -40,7 +40,7 @@ namespace Shopping.Web.Pages
 
                 //then we remove the item from the list on the client side
                 RemoveItem(id);
-                CalculateCartSummaryTotals();
+                CartChanged();
             }
             catch (Exception ex)
             {
@@ -73,8 +73,8 @@ namespace Shopping.Web.Pages
                     };
                     var result = await ShoppingCartService.UpdateItem(updateItemDto);
                     UpdateItmeTotalPrice(result);
-                    CalculateCartSummaryTotals();
-                    await MakeUpdateQtyButtonVisible(id,false);
+                    CartChanged();
+                    await MakeUpdateQtyButtonVisible(id, false);
                 }
                 else
                 {
@@ -119,11 +119,17 @@ namespace Shopping.Web.Pages
         }
         protected async Task UpdateQty_Input(int id)
         {
-            await MakeUpdateQtyButtonVisible(id,true);
+            await MakeUpdateQtyButtonVisible(id, true);
         }
         private async Task MakeUpdateQtyButtonVisible(int id, bool isVisible)
         {
             await JsRuntime.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, isVisible);
+        }
+        private void CartChanged()
+        {
+            CalculateCartSummaryTotals();
+            ShoppingCartService.RaiseEventOnShoppingCartChanged(TotalItems);
+
         }
     }
 }

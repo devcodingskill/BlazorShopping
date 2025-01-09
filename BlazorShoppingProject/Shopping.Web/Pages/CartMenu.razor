@@ -1,0 +1,33 @@
+﻿@implements IDisposable
+@inject IShoppingCartService ShoppingCartService
+
+<a href="" class="btn btn-info">
+    <i class="fa-solid fa-cart-shopping"></i>&nbsp; Cart
+    <span class="badge badge-dark">@shoppingCartItemsCount</span>
+</a>
+    
+
+
+
+
+
+
+
+
+@* we are not create the base class because not much code it this page  *@
+@code {
+    private int shoppingCartItemsCount = 0;
+    protected override async Task OnInitializedAsync()
+    {
+        ShoppingCartService.OnShoppingCartChange+= ShoppingCartChanged;
+    }
+    protected void ShoppingCartChanged(int totalQty)
+    {
+        shoppingCartItemsCount = totalQty;
+        StateHasChanged();
+    }
+    void IDisposable.Dispose()
+    {
+        ShoppingCartService.OnShoppingCartChange -= ShoppingCartChanged;
+    }
+}
