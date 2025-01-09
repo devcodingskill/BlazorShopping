@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Shopping.Models.Dtos;
 using Shopping.Web.Services.Contracts;
 
@@ -7,12 +8,15 @@ namespace Shopping.Web.Pages
     public class ShoppingCartBase : ComponentBase
     {
         [Inject]
+        public IJSRuntime JsRuntime { get; set; }
+
+        [Inject]
         public IShoppingCartService ShoppingCartService { get; set; }
 
 
         public List<CartItemDto> ShoppingCartItems { get; set; }
         public string Errormessage { get; set; }
-        protected string TotalPrice { get; set;}
+        protected string TotalPrice { get; set; }
         protected int TotalItems { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -70,6 +74,7 @@ namespace Shopping.Web.Pages
                     var result = await ShoppingCartService.UpdateItem(updateItemDto);
                     UpdateItmeTotalPrice(result);
                     CalculateCartSummaryTotals();
+                    await MakeUpdateQtyButtonVisible(id,false);
                 }
                 else
                 {
@@ -91,7 +96,7 @@ namespace Shopping.Web.Pages
         {
             //This method is used to calculate the total price of the items in the cart
             //this will sum the price column of all the items in the cart
-            TotalPrice = ShoppingCartItems.Sum(i => i.TotalPrice).ToString("C");           
+            TotalPrice = ShoppingCartItems.Sum(i => i.TotalPrice).ToString("C");
         }
         private void SetTotalQuantity()
         {
@@ -109,8 +114,16 @@ namespace Shopping.Web.Pages
             var item = GetCartItems(cartItemDto.Id);
             if (item != null)
             {
-                item.TotalPrice = cartItemDto.Price* cartItemDto.Quantity;
+                item.TotalPrice = cartItemDto.Price * cartItemDto.Quantity;
             }
+        }
+        protected async Task UpdateQty_Input(int id)
+        {
+            await MakeUpdateQtyButtonVisible(id,true);
+        }
+        private async Task MakeUpdateQtyButtonVisible(int id, bool isVisible)
+        {
+            await JsRuntime.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, isVisible);
         }
     }
 }
