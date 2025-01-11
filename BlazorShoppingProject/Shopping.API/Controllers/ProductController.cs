@@ -59,5 +59,48 @@ namespace Shopping.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "error retrieving data from the database");
             }
         }
+        [HttpGet]
+        [Route(nameof(GetProductCategories))]
+        public async Task<ActionResult<IEnumerable<ProductCategoryDto>>> GetProductCategories()
+        {
+            try
+            {
+                var productCategories = await _productRepository.GetCategories();
+
+                if (productCategories == null)
+                    return NotFound();
+                else
+                {
+                    var productCategoryDtos = productCategories.ConvertToDto();
+                    return Ok(productCategoryDtos);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "error retrieving data from the database");
+            }
+        }
+        [HttpGet]
+        [Route("{categoryId}/GetItemByCategory")]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetItemByCategory(int categoryId)
+        {
+            try
+            {
+                var products = await _productRepository.GetItemsByCategory(categoryId);
+                var productCategories = await _productRepository.GetCategories();
+
+                if (products == null || productCategories == null)
+                    return NotFound();
+                else
+                {
+                    var productDtos = products.ConvertToDto(productCategories);
+                    return Ok(productDtos);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "error retrieving data from the database");
+            }
+        }
     }
 }

@@ -107,7 +107,6 @@ namespace Shopping.API.Extensions
 
         public static CartItemDto ConvertToDto(this CartItem cartItem, Product product)
         {
-
             return new CartItemDto
             {
                 Id = cartItem.Id,
@@ -120,8 +119,21 @@ namespace Shopping.API.Extensions
                 ProductImageURL = product.ImageURL,
                 TotalPrice = cartItem.Quantity * product.Price
             };
+        }
+        public static IEnumerable<ProductCategoryDto> ConvertToDto(this IEnumerable<ProductCategory> productCategories)
+        {
+            var productCategoryDtos = (from ProductCategory in productCategories
+                                       select new ProductCategoryDto
+                                       {
+                                           Id = ProductCategory.Id,
+                                           Name = ProductCategory.Name,
+                                           IconCss = ProductCategory.IconCss
 
+                                       }).ToList();
+                                       
+            
 
+            return productCategoryDtos;
         }
     }
 }

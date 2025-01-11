@@ -8,5 +8,6 @@ namespace Shopping.API.Repository.Contacts
         Task<IEnumerable<ProductCategory>> GetCategories(); 
         Task<ProductCategory> GetCategory(int id);
         Task<Product> GetItem(int id);
+        Task<IEnumerable<Product>> GetItemsByCategory(int id);
     }
 }

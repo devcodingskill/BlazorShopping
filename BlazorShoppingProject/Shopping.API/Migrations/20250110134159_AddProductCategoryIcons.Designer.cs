@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shopping.API.Data;
 
@@ -10,9 +11,11 @@ using Shopping.API.Data;
 namespace Shopping.API.Migrations
 {
     [DbContext(typeof(ShopOnlineDBContext))]
-    partial class ShopOnlineDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250110134159_AddProductCategoryIcons")]
+    partial class AddProductCategoryIcons
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
